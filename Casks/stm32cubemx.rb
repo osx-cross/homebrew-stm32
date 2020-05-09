@@ -15,12 +15,16 @@ cask 'stm32cubemx' do
   }
 
   postflight do
-    binary_file = "/usr/local/bin/stm32cubemx"
-    File.open(binary_file, "w") { |f|
+    usr_local_bin_file = "/usr/local/bin/stm32cubemx"
+    cubemx_app_file = "#{appdir}/STMicroelectronics/STM32CubeMX.app/Contents/MacOs/stm32cubemx.sh"
+
+    File.open(cubemx_app_file, "w") { |f|
       f.write("#!/usr/bin/env bash\njava -jar #{appdir}/STMicroelectronics/STM32CubeMX.app/Contents/MacOs/STM32CubeMX $@\n")
       f.close
     }
-    FileUtils.chmod 0755, binary_file
+
+    FileUtils.chmod 0755, cubemx_app_file
+    FileUtils.ln_sf cubemx_app_file, usr_local_bin_file
   end
 
   uninstall script: {
