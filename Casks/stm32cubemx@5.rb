@@ -12,30 +12,39 @@ cask 'stm32cubemx' do
     executable: 'java',
     args:       ['-jar', "#{staged_path}/SetupSTM32CubeMX-#{version}.exe"],
     must_succeed: true
-  }
+	}
 
-  postflight do
-    usr_local_bin_file = "/usr/local/bin/stm32cubemx"
-    cubemx_app_file = "#{appdir}/STMicroelectronics/STM32CubeMX.app/Contents/MacOs/stm32cubemx.sh"
+	version_suffix = '@5'
 
-    File.open(cubemx_app_file, "w") { |f|
-      f.write("#!/usr/bin/env bash\njava -jar #{appdir}/STMicroelectronics/STM32CubeMX.app/Contents/MacOs/STM32CubeMX $@\n")
+	cubemx_original_app_path = "#{appdir}/STMicroelectronics/STM32CubeMX.app"
+	cubemx_final_app_path = "#{appdir}/STMicroelectronics/STM32CubeMX#{version_suffix}.app"
+
+	usr_local_bin_file = "/usr/local/bin/stm32cubemx#{version_suffix}"
+	cubemx_script_file = "#{cubemx_final_app_path}/Contents/MacOs/stm32cubemx.sh"
+
+	postflight do
+    unless version_suffix.empty? do
+      ohai "Adding #{version_suffix} to STM32CubeMX.app filename"
+      FileUtils.mv cubemx_original_app_path cubemx_final_app_path
+		end
+
+    File.open(cubemx_script_file, "w") { |f|
+      f.write("#!/usr/bin/env bash\njava -jar #{cubemx_final_app_path}/Contents/MacOs/STM32CubeMX $@\n")
       f.close
     }
 
-    FileUtils.chmod 0755, cubemx_app_file
-    FileUtils.ln_sf cubemx_app_file, usr_local_bin_file
+    FileUtils.chmod 0755, cubemx_script_file
+    FileUtils.ln_sf cubemx_script_file, usr_local_bin_file
   end
 
   uninstall script: {
     executable: 'java',
-    args:       ['-jar', '/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources/Uninstaller/uninstaller.jar'],
+    args:       ['-jar', '#{cubemx_final_app_path}/Contents/Resources/Uninstaller/uninstaller.jar'],
     must_succeed: true
   }
 
   uninstall_preflight do
-    binary_file = "/usr/local/bin/stm32cubemx"
-    FileUtils.rm binary_file, force: true
+    FileUtils.rm usr_local_bin_file, force: true
   end
 
   caveats do
