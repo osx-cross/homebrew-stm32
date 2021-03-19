@@ -1,5 +1,5 @@
 cask 'stm32cubeide' do
-  version '1.3.0'
+  version '1.6.0'
   sha256 '1e15227f860d1fcbb00c7b232feb6ba9cff879f0a2e942b7d6669bb13ec0a757'
 
   url "https://www.dropbox.com/s/0k8hu9kvb6egkag/en.stm32cubeide_v#{version}.dmg?dl=1"
