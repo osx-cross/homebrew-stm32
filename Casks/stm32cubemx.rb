@@ -1,68 +1,65 @@
-cask 'stm32cubemx' do
+cask "stm32cubemx" do
+  module Utils
+    def self.cubemx_app_path
+      "/Applications/STMicroelectronics/STM32CubeMX.app"
+    end
 
-	module Utils
-		def self.version_suffix
-			 return ""
-		end
+    def self.usr_local_bin_file
+      "/usr/local/bin/stm32cubemx"
+    end
 
-		def self.cubemx_original_app_path
-			 return "/Applications/STMicroelectronics/STM32CubeMX.app"
-		end
+    def self.cubemx_script_file
+      "#{cubemx_app_path}/Contents/MacOs/stm32cubemx.sh"
+    end
+  end
 
-		def self.cubemx_final_app_path
-			 return "/Applications/STMicroelectronics/STM32CubeMX#{self.version_suffix}.app"
-		end
+  version "6.2.0"
+  sha256 :no_check
 
-		def self.usr_local_bin_file
-			 return "/usr/local/bin/stm32cubemx#{self.version_suffix}"
-		end
-
-		def self.cubemx_script_file
-			 return "#{self.cubemx_final_app_path}/Contents/MacOs/stm32cubemx.sh"
-		end
-	end
-
-  version '6.1.0'
-  sha256 'b51d3a4f04ef4e5eadca018881290f392647d8bdffafe2ebf353fcac3182ee9d'
-
-  url "https://www.dropbox.com/s/gz96z7cbfnv3mqm/en.stm32cubemx_v6.1.0.zip?dl=1"
-  name 'STM32CubeMX'
-  homepage 'https://www.st.com/en/development-tools/stm32cubemx.html'
+  url "https://www.dropbox.com/s/oega5zar68w8b0p/en.stm32cubemx_v6.2.0.zip?dl=1", header: "", data: "",
+      verified: "dropbox.com/s/oega5zar68w8b0p"
+  name "STM32CubeMX"
+  desc "- STM32Cube initialization code generator"
+  homepage "https://www.st.com/en/development-tools/stm32cubemx.html"
 
   auto_updates false
+  depends_on cask: "AdoptOpenJDK/openjdk/adoptopenjdk15"
 
   installer script: {
-    executable: 'java',
-    args:       ['-jar', "#{staged_path}/SetupSTM32CubeMX-#{version}.exe"],
-    must_succeed: true
-	}
+    executable:   "/Library/Java/JavaVirtualMachines/adoptopenjdk-15.jdk/Contents/Home/bin/java",
+    args:         ["-jar", "#{staged_path}/SetupSTM32CubeMX-6.2.0-RC3.app/Contents/MacOs/SetupSTM32CubeMX-6_2_0"],
+    must_succeed: true,
+  }
 
-	postflight do
-    unless Utils.version_suffix.empty?
-      ohai "Adding #{Utils.version_suffix} to STM32CubeMX.app filename"
-      FileUtils.mv Utils.cubemx_original_app_path Utils.cubemx_final_app_path
-		end
-
-    File.open(Utils.cubemx_script_file, "w") { |f|
-      f.write("#!/usr/bin/env bash\njava -jar #{Utils.cubemx_final_app_path}/Contents/MacOs/STM32CubeMX $@\n")
+  postflight do
+    File.open(Utils.cubemx_script_file, "w") do |f|
+      f << "\#\!/usr/bin/env bash\n"
+      f << "/Library/Java/JavaVirtualMachines/adoptopenjdk-15.jdk/Contents/Home/bin/java "
+      f << "-jar "
+      f << "/Applications/STMicroelectronics/STM32CubeMX.app/Contents/MacOS/STM32CubeMX $@\n"
       f.close
-    }
+    end
 
     FileUtils.chmod 0755, Utils.cubemx_script_file
     FileUtils.ln_sf Utils.cubemx_script_file, Utils.usr_local_bin_file
   end
 
-  uninstall script: {
-    executable: 'java',
-    args:       ['-jar', '#{Utils.cubemx_final_app_path}/Contents/Resources/Uninstaller/uninstaller.jar'],
-    must_succeed: true
-  }
-
   uninstall_preflight do
     FileUtils.rm Utils.usr_local_bin_file, force: true
   end
 
-  caveats do
-    depends_on_java
-  end
+  uninstall script: {
+    executable:   "/Library/Java/JavaVirtualMachines/adoptopenjdk-15.jdk/Contents/Home/bin/java",
+    args:         ["-jar", "#{Utils.cubemx_app_path}/Contents/Resources/Uninstaller/uninstaller.jar"],
+    must_succeed: false,
+  }
+
+  caveats "The STM32CubeMX.app might not work when trying to open it. If it's the case,\n" \
+          "launch the app from the command line by running:\n" \
+          "  $ stm32cubemx\n" \
+          "This cask depends on OpenJDK 15 and does **not** work with OpenJDK 16.\n" \
+          "To use, first uninstall OpenJDK 16 if it is installed:\n" \
+          "  $ brew uninstall --cask adoptopenjdk adoptopenjdk16\n" \
+          "Then install OpenJDK 15:\n" \
+          "  $ brew install --cask AdoptOpenJDK/openjdk/adoptopenjdk15\n"
 end
