@@ -18,7 +18,7 @@ It's as simple as...
 $ brew tap osx-cross/stm32
 
 # install the cask or formula you want
-$ brew cask install ...
+$ brew cask install {formula}
 
 # for example
 $ brew cask install stm32cubemx
@@ -47,7 +47,7 @@ ST's work under [ST's License Agreement](https://www.st.com/resource/en/license_
 
 ### Casks & Formulae
 
-```
+```txt
 Copyright 2020 osx-cross (http://github.com/osx-cross)
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
