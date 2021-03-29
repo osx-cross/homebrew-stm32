@@ -19,7 +19,7 @@ cask "stm32cubemx" do
   url "https://www.dropbox.com/s/oega5zar68w8b0p/en.stm32cubemx_v6.2.0.zip?dl=1", header: "", data: "",
       verified: "dropbox.com/s/oega5zar68w8b0p"
   name "STM32CubeMX"
-  desc "- STM32Cube initialization code generator"
+  desc "STM32Cube initialization code generator"
   homepage "https://www.st.com/en/development-tools/stm32cubemx.html"
 
   auto_updates false
@@ -54,12 +54,12 @@ cask "stm32cubemx" do
     must_succeed: false,
   }
 
-  caveats "The STM32CubeMX.app might not work when trying to open it. If it's the case,\n" \
-          "launch the app from the command line by running:\n" \
+  caveats "This cask depends on OpenJDK 15 and does **not** work with OpenJDK 16.\n" \
+          "To use, first install OpenJDK 15:\n" \
+          "  $ brew install --cask AdoptOpenJDK/openjdk/adoptopenjdk15\n" \
+          "The STM32CubeMX.app might not work when trying to open it from the Finder.\n" \
+          "If it's the case, launch the app from the terminal by running:\n" \
           "  $ stm32cubemx\n" \
-          "This cask depends on OpenJDK 15 and does **not** work with OpenJDK 16.\n" \
-          "To use, first uninstall OpenJDK 16 if it is installed:\n" \
-          "  $ brew uninstall --cask adoptopenjdk adoptopenjdk16\n" \
-          "Then install OpenJDK 15:\n" \
-          "  $ brew install --cask AdoptOpenJDK/openjdk/adoptopenjdk15\n"
+          "Or with '-i' option for the interactive mode:\n" \
+          "  $ stm32cubemx -i\n" \
 end
