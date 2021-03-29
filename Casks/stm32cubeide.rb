@@ -5,7 +5,7 @@ cask "stm32cubeide" do
   url "https://www.dropbox.com/s/5n4qgtjvp9ehnei/en.stm32cubeide_v1.6.0.dmg?dl=1", header: "", data: "",
       verified: "dropbox.com/s/5n4qgtjvp9ehnei"
   name "STM32CubeIDE"
-  desc "- Integrated Development Environment for STM32"
+  desc "Integrated Development Environment for STM32"
   homepage "https://www.st.com/en/development-tools/stm32cubeide.html"
 
   auto_updates true
