@@ -32,6 +32,7 @@ cask "stm32cubemx" do
   }
 
   postflight do
+    ohai "Creating command line invocation script"
     File.open(Utils.cubemx_script_file, "w") do |f|
       f << "\#\!/usr/bin/env bash\n"
       f << "/Library/Java/JavaVirtualMachines/adoptopenjdk-15.jdk/Contents/Home/bin/java "
@@ -40,8 +41,12 @@ cask "stm32cubemx" do
       f.close
     end
 
+    ohai "Symlinking command line invocation script to /usr/local/bin"
     FileUtils.chmod 0755, Utils.cubemx_script_file
     FileUtils.ln_sf Utils.cubemx_script_file, Utils.usr_local_bin_file
+
+    ohai "Fixing STM32CubeMX.app finder opening issue"
+    FileUtils.ln_sf "#{staged_path}/jre", "/Applications/STMicroelectronics/STM32CubeMX.app/Contents/MacOs/jre"
   end
 
   uninstall_preflight do
