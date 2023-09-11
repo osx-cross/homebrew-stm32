@@ -2,7 +2,7 @@ cask "stm32cubeide" do
   version "1.6.0"
   sha256 :no_check
 
-  url "https://www.dropbox.com/s/5n4qgtjvp9ehnei/en.stm32cubeide_v1.6.0.dmg?dl=1", header: "", data: "",
+  url "https://www.dropbox.com/s/5n4qgtjvp9ehnei/en.stm32cubeide_v1.6.0.dmg?dl=1", header: "", data: nil,
       verified: "dropbox.com/s/5n4qgtjvp9ehnei"
   name "STM32CubeIDE"
   desc "Integrated Development Environment for STM32"

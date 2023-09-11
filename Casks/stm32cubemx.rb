@@ -16,7 +16,7 @@ cask "stm32cubemx" do
   version "6.2.0"
   sha256 :no_check
 
-  url "https://www.dropbox.com/s/oega5zar68w8b0p/en.stm32cubemx_v6.2.0.zip?dl=1", header: "", data: "",
+  url "https://www.dropbox.com/s/oega5zar68w8b0p/en.stm32cubemx_v6.2.0.zip?dl=1", header: "", data: nil,
       verified: "dropbox.com/s/oega5zar68w8b0p"
   name "STM32CubeMX"
   desc "STM32Cube initialization code generator"
